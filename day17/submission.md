@@ -1,45 +1,47 @@
 
+
 ## 1. MVP Boundary Sheet
 
-**Mục tiêu:** Ranh giới rõ ràng để kiểm chứng giả định cốt lõi với chi phí rẻ nhất.
+**Mục tiêu:** Ranh giới rõ ràng để kiểm chứng giả định cốt lõi với chi phí rẻ nhất và tránh các rủi ro kỹ thuật (latency, cost).
 
 | Phân loại | Tính năng | Giải thích (Lý do chọn) |
 | :--- | :--- | :--- |
-| **In-Scope**<br>*(Bắt buộc phải có)* | 1. Input GitHub Repo URL<br>2. Phân tích cấu trúc thư mục & Tóm tắt kiến trúc tổng quan<br>3. Q&A cơ bản về luồng code (Data flow) trong repo | Đây là cốt lõi để test xem người dùng có thực sự nhận được giá trị từ việc AI "đọc hộ" repo hay không. |
-| **Out-of-Scope**<br>*(Tốt nhưng chưa cần)* | 1. Tích hợp trực tiếp thành Extension trên VSCode/IntelliJ<br>2. Phân tích và so sánh nhiều repo cùng lúc (Multi-repo analysis)<br>3. Vẽ sơ đồ UML tự động (Auto-diagramming) | Có thì tốt, nhưng tốn nhiều thời gian phát triển và không giải quyết giả định cốt lõi ban đầu của MVP. |
-| **Non-Goals**<br>*(Ranh giới đỏ)* | 1. Viết code tự động để sửa bug (Auto-fixing)<br>2. Công cụ quét lỗ hổng bảo mật chuyên sâu (SAST/DAST) | CodebaseCompass là công cụ "la bàn" để học và hiểu repo, không phải là một AI Copilot để gõ code hay một scanner bảo mật thay thế con người. |
+| **In-Scope**<br>*(Bắt buộc phải có)* | 1. Input GitHub Repo URL (giới hạn size repo < 50MB hoặc < 500 files).<br>2. Xuất sơ đồ cây (Tree-view) và tóm tắt vai trò của các thư mục lõi.<br>3. Q&A tĩnh trên 1 file cụ thể hoặc nhóm file (≤ 3 files) do user chủ động khoanh vùng. | Giải quyết đúng "nỗi đau" tìm đường trong repo lạ. Giới hạn dung lượng và số lượng file giúp hệ thống phản hồi nhanh (< 10 giây) và kiểm soát chi phí API ở mức tối thiểu. |
+| **Out-of-Scope**<br>*(Tốt nhưng chưa cần)* | 1. Q&A truy vết luồng dữ liệu (Data flow) tự động xuyên suốt toàn bộ repo.<br>2. Tích hợp trực tiếp thành Extension trên IDE.<br>3. Vẽ sơ đồ UML tự động (Auto-diagramming). | Q&A Data flow toàn cục đòi hỏi xây dựng hệ thống RAG phức tạp hoặc AST, làm chậm tiến độ MVP. Hãy để user tự khoanh vùng file cần phân tích trước. |
+| **Non-Goals**<br>*(Ranh giới đỏ)* | 1. Viết code tự động để sửa bug (Auto-fixing).<br>2. Công cụ quét lỗ hổng bảo mật chuyên sâu (SAST/DAST). | CodebaseCompass là "la bàn" định hướng kiến trúc, không phải AI Copilot để code hộ hay Security Scanner. |
 
 ---
 
 ## 2. PRD Skeleton (Bộ khung yêu cầu sản phẩm)
 
-**Mục tiêu:** Đồng bộ ngôn ngữ giữa Product, Engineering và AI Model.
+**Mục tiêu:** Đồng bộ ngôn ngữ giữa Product, Engineering và thiết lập luồng xử lý AI thực tế.
 
 ### A. Standard Components
 
-* **Problem Statement:** Việc đọc hiểu một repository mới, không có tài liệu (undocumented) hoặc code rác (spaghetti code) khiến các lập trình viên mới (newbies) hoặc người tham gia dự án tốn hàng tuần chỉ để hiểu luồng đi của dữ liệu.
-* **Target User:** Software Engineers (đặc biệt là Junior/Mid-level) mới join vào dự án, hoặc những người muốn học hỏi từ các Open-source repo trên GitHub.
-* **User Story #1:** As a *lập trình viên mới onboarding*, I want *nhập link GitHub vào CodebaseCompass* so that *tôi có thể đọc được bản tóm tắt kiến trúc và các module chính chỉ trong 5 phút*.
-* **User Story #2:** As a *người học code*, I want *hỏi AI về cách một API cụ thể hoạt động trong repo* so that *tôi hiểu được luồng xử lý mà không cần dò từng file bằng tay*.
+* **Problem Statement:** Việc đọc hiểu một repository mới, không có tài liệu khiến các lập trình viên tốn hàng tuần chỉ để rà soát xem tính năng A được đặt ở thư mục nào và các file liên kết tĩnh ra sao.
+* **Target User:** Software Engineers (Junior/Mid-level) mới onboard vào dự án, hoặc người tự học qua Open-source.
+* **User Story #1:** As a *lập trình viên mới*, I want *hệ thống tóm tắt mục đích của các thư mục chính (ví dụ: `src/utils` dùng để làm gì)* so that *tôi biết nên bắt đầu đọc từ đâu thay vì mở từng file.*
+* **User Story #2:** As a *người tìm hiểu code*, I want *chọn file `auth.controller.ts` và hỏi AI về logic của file này* so that *tôi hiểu cách file này hoạt động độc lập trước khi tự ghép nối nó vào hệ thống.*
 
 ### B. AI-Specific Components
 
-* **Model Selection:** LLM có Context Window cực lớn (ví dụ: GPT-4o với 1M-2M tokens) để có thể nạp toàn bộ cấu trúc mã nguồn của một repo cỡ trung bình vào ngữ cảnh (context) mà không bị "rớt chữ".
-* **Data Source:** Public GitHub Repositories (thông qua GitHub API để clone text files). Đối với MVP, giới hạn các file `.py`, `.js`, `.ts`, `.go`, `.java` và bỏ qua các file binary/media.
-* **Fallback UX (Thiết kế khi AI ngáo):**
-    * **Quản trị kỳ vọng:** Khi mới load repo, hiện dòng chữ: *"AI đang phân tích repo. Kết quả có thể bỏ sót các logic ẩn, hãy luôn đối chiếu với mã nguồn gốc."*
-    * **Xử lý giới hạn:** Khi repo quá lớn (vượt Context Window), hệ thống không được crash. Hiện thông báo: *"Repo quá lớn. Vui lòng chọn 1-3 thư mục cốt lõi (ví dụ: /src, /api) để AI tập trung phân tích."*
-    * **Mất tự tin:** Nếu người dùng hỏi một đoạn code AI không tìm thấy, AI phải trả lời *"Không tìm thấy định nghĩa function này trong các file text đã quét"* thay vì bịa ra (hallucinate) một luồng code ảo.
+* **AI Architecture (Pipeline 2 bước thay vì nhồi nhét Context):**
+    * *Bước 1 (Mapping):* Dùng API của GitHub lấy cấu trúc cây thư mục và file `README.md`. Đưa vào LLM (tốc độ cao, chi phí rẻ như GPT-4o-mini) để phân loại và tóm tắt kiến trúc.
+    * *Bước 2 (On-demand Q&A):* Chỉ khi user click chọn cụ thể 1 file (hoặc paste đoạn code), hệ thống mới trích xuất nội dung text của file đó và đưa vào LLM (tốc độ cao) để giải thích logic cục bộ.
+* **Fallback UX (Thiết kế quản trị rủi ro AI):**
+    * **Giới hạn dung lượng:** Nếu user nhập link repo quá lớn (như repo lõi của Linux), hiện thông báo: *"Repo vượt quá 500 files. Để đảm bảo tốc độ, vui lòng điền đường dẫn đến một thư mục con cụ thể (Ví dụ: `github.com/torvalds/linux/tree/master/kernel`)."*
+    * **Cảnh báo "Dependency Hell":** Khi AI giải thích một file có gọi API từ bên ngoài, luôn kèm theo disclaimer: *"Lưu ý: File này phụ thuộc vào thư viện `axios` và service `PaymentGateway`. AI hiện chỉ phân tích logic tĩnh nội bộ trong file này."*
+    * **Chống Hallucination:** Prompt kỹ thuật phải ép model trả lời *"Tôi không tìm thấy thông tin này trong cấu trúc thư mục hiện tại"* nếu user hỏi về một module không tồn tại, tuyệt đối không tự bịa tên file.
 
 ---
 
 ## 3. Hypothesis & PMF Scorecard
 
-**Mục tiêu:** Đưa ra con số đo lường sự thành công thay vì cảm giác mơ hồ.
+**Mục tiêu:** Đo lường sự tham gia sâu (Deep engagement) và giá trị ứng dụng thực tế.
 
 | Thành phần | Chi tiết cho CodebaseCompass |
 | :--- | :--- |
-| **Riskiest Assumption** | Lập trình viên sẽ tin tưởng và dựa vào tóm tắt của AI để học về repo, thay vì thói quen truyền thống là tự clone code về máy và mò mẫm trên IDE của họ. |
-| **Hypothesis** | Chúng tôi tin rằng tính năng Q&A trực tiếp trên mã nguồn sẽ giúp lập trình viên mới đạt được sự hiểu biết về luồng dữ liệu (Data flow) nhanh gấp 3 lần bình thường. |
-| **Aha Moment** | Khoảnh khắc người dùng copy một hàm cực kỳ phức tạp/khó hiểu trong repo và CodebaseCompass giải thích chính xác nó được gọi từ đâu đến đâu bằng ngôn ngữ tự nhiên, giúp họ "sáng mắt ra" ngay lập tức. |
-| **PMF Signal** | **Actionable Metric:** Một user phân tích thành công ít nhất **≥ 3** repo khác nhau trong tuần đầu tiên trải nghiệm.<br><br>**Retention:** Tỷ lệ D7 Retention (quay lại sau 7 ngày) **> 20%**. |
+| **Riskiest Assumption** | User sẽ tin tưởng dùng bản tóm tắt kiến trúc của AI làm "bản đồ" để điều hướng trong IDE của họ, thay vì phớt lờ nó và tự dùng tính năng Search/Find in Files truyền thống. |
+| **Hypothesis** | Chúng tôi tin rằng việc bóc tách và giải thích kiến trúc thư mục bằng ngôn ngữ tự nhiên sẽ giúp giảm 50% thời gian user tìm ra đúng file chứa logic cần sửa. |
+| **Aha Moment** | Khoảnh khắc user đặt câu hỏi khái quát về dự án (Ví dụ: *"Tôi muốn đổi logic tính thuế ở giỏ hàng thì tìm ở đâu?"*) và AI chỉ ra đích danh đường dẫn file chính xác (Ví dụ: *"Bạn hãy kiểm tra hàm `calculateTax()` trong `src/services/checkout.ts`"*). |
+| **PMF Signal** | **1. Conversation Depth (Độ sâu hội thoại):** ≥ 30% user có từ **4 lượt hỏi-đáp (turns)** trở lên trên *cùng một repo* (chứng tỏ họ thực sự dùng tool để đào sâu nghiên cứu, không phải test dạo).<br><br>**2. Actionable Rate (Tỷ lệ ứng dụng):** ≥ 20% session kết thúc bằng việc user thực hiện thao tác **Copy to Clipboard** câu trả lời của AI hoặc bấm nút **Export Architecture Note** (chứng tỏ kết quả đầu ra đủ chất lượng để họ dùng cho công việc thật).<br><br>**3. Retention:** Tỷ lệ D7 Retention **> 20%**. |
