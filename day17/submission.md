@@ -24,7 +24,7 @@
 
 ### B. AI-Specific Components
 
-* **Model Selection:** LLM có Context Window cực lớn (ví dụ: Gemini 1.5 Pro với 1M-2M tokens) để có thể nạp toàn bộ cấu trúc mã nguồn của một repo cỡ trung bình vào ngữ cảnh (context) mà không bị "rớt chữ".
+* **Model Selection:** LLM có Context Window cực lớn (ví dụ: GPT-4o với 1M-2M tokens) để có thể nạp toàn bộ cấu trúc mã nguồn của một repo cỡ trung bình vào ngữ cảnh (context) mà không bị "rớt chữ".
 * **Data Source:** Public GitHub Repositories (thông qua GitHub API để clone text files). Đối với MVP, giới hạn các file `.py`, `.js`, `.ts`, `.go`, `.java` và bỏ qua các file binary/media.
 * **Fallback UX (Thiết kế khi AI ngáo):**
     * **Quản trị kỳ vọng:** Khi mới load repo, hiện dòng chữ: *"AI đang phân tích repo. Kết quả có thể bỏ sót các logic ẩn, hãy luôn đối chiếu với mã nguồn gốc."*
