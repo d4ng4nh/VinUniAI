@@ -1,0 +1,15 @@
+# RISK REGISTER V2 (AI-AUGMENTED & MITIGATION)
+*Burn Rate = 250 triệu VNĐ/tháng. Đã chạy qua AI CRO Audit prompt.*
+
+| # | Type | Risk (If - Then - Leading to) | L | I | Score | Mitigation (Dưới $500/tháng, founder-led) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Vendor** | **If** Github chặn IP máy chủ do hit API Rate Limit,<br>**Then** Toàn bộ Agent Scanner tê liệt,<br>**Leading to** 0.5 tháng runway. | 4 | 2 | 8 | *Plan B: Fallback yêu cầu user tự nhập Github PAT (Personal Access Token) của họ để quét.* |
+| 2 | **Vendor** | **If** Anthropic/OpenAI tăng giá API bất ngờ,<br>**Then** Gross margin âm nặng,<br>**Leading to** 1 tháng runway. | 2 | 2 | 4 | *Cost tracking Helicone alert khi daily cost > $50.* |
+| 3 | **Customer** | **If** AI giải thích sai code bảo mật (auth),<br>**Then** User deploy code lỗi bị hack,<br>**Leading to** 4 tháng runway. | 3 | 4 | 12 | *Output Guardrail (Nemo): Block các topic nhạy cảm về crypto/auth, hiện cảnh báo "Please manually review auth logic".* |
+| 4 | **Customer** | **If** Render bản đồ 3D gây tràn RAM (OOM) trên Chrome,<br>**Then** App crash liên tục trên máy yếu,<br>**Leading to** 1 tháng runway. | 4 | 2 | 8 | *JS tự động fallback về 2D Tree-map nếu detect FPS < 30.* |
+| 5 | **Founder** | **[KILL ZONE] If** Tech Founder nghỉ ốm 1 tuần lúc server sập,<br>**Then** App downtime kéo dài,<br>**Leading to** 3 tháng runway. | 3 | 5 | **15** | *Mitigation: Viết Runbook (1 trang) cách restart server & flush Redis cache, train cho Co-founder/Dev còn lại (0$).* |
+| 6 | **Regulatory** | **[KILL ZONE] If** Hệ thống copy mã nguồn có giấy phép GPL/Copyleft vào kết quả tóm tắt mà không cite nguồn,<br>**Then** Bị tổ chức Open Source kiện vi phạm bản quyền,<br>**Leading to** 5 tháng runway. | 4 | 5 | **20** | *Mitigation: Rào cản ở Agent 3: Ép LLM luôn attach URL Github source vào mỗi lời giải thích (0$).* |
+| 7 | **Regulatory** | **If** Không cung cấp nút xóa dữ liệu cho EU Devs,<br>**Then** Vi phạm GDPR bị report,<br>**Leading to** 2 tháng runway. | 2 | 3 | 6 | *Thêm nút "Delete my Repo Data" clear cache lập tức.* |
+| 8 | **Reputational** | **[KILL ZONE] If** User dùng Prompt Injection gài mã độc vào README.md của repo Github để hack hệ thống RepoMap3D lúc quét,<br>**Then** AI render ra bản đồ 3D chứa text chửi bới viral trên X,<br>**Leading to** 4 tháng runway. | 4 | 4 | **16** | *Mitigation: Input Guardrails: Dùng Regex filter reject tất cả các prompt injection phổ biến trước khi đưa text cho LLM (0$).* |
+| 9 | **Reputational** | **If** Đối thủ tung tin đồn RepoMap3D đánh cắp code,<br>**Then** PR crisis,<br>**Leading to** 2 tháng runway. | 2 | 4 | 8 | *Công khai trang Security Policy & Architecture minh bạch cách dữ liệu đi qua.* |
+| 10 | **Data Leakage** | **[KILL ZONE] If** LLM Provider dùng mã nguồn Private Repo để train model,<br>**Then** Lộ trade-secret của Enterprise,<br>**Leading to** 6 tháng runway. | 3 | 5 | **15** | *Mitigation: Chỉ dùng Enterprise Tier API (Zero Data Retention) + Helicone Data Sanitizer ($50/mo).* |
