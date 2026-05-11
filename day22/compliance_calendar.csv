@@ -1,0 +1,7 @@
+Mốc Thời Gian,Nội Dung Quy Định,Hành Động Cần Làm Của Founder,Trạng Thái
+1/1/2026,Luật BVDLCN (PDPL) có hiệu lực,"- Nộp hồ sơ DPIA và CTIA trong 60 ngày. - Cập nhật Privacy Policy. - Bổ sung nút xóa data cho User.",TODO
+1/3/2026,Luật AI Việt Nam có hiệu lực,"- Khai báo hệ thống AI Tầng Trung bình lên Cổng AI Quốc gia. - Bổ sung dán nhãn 'Nội dung do AI tạo ra'.",TODO
+2/8/2026,EU AI Act có hiệu lực (High-risk),"- Chỉ định Đại diện pháp lý EU (nếu scale sang EU). - Tuân thủ minh bạch thuật toán.",TODO
+Hằng Tuần (Friday),Kiểm tra Giao dịch & Helicone Log,"- Đánh giá Audit log xem có lạm dụng API/nhập repo malware không. - Review các output bị flag.",RECURRING
+Hằng Quý,Rà soát Vendor & Claim Marketing,"- Kiểm tra xem Anthropic/OpenAI có đổi Policy không. - Rà soát các câu từ Marketing mới.",RECURRING
+Trước mỗi đợt Launch,Phê duyệt nội dung Marketing,"- Founder ký duyệt nội dung cam kết không thổi phồng công dụng AI.",RECURRING
