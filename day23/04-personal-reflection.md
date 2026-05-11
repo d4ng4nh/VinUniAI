@@ -1,0 +1,5 @@
+Chỉ số tôi quyết định loại bỏ trong quá trình đưa AI vào RepoMap3D là "Số lượng link Github được dán vào web" (Usage Metric). Tôi thay thế nó bằng cặp chỉ số Outcome: "Thời gian Time-to-first-commit (TTFC)" (Productivity) và "Tỷ lệ code không bị rework khi review" (Quality).
+
+Lý do chỉ số cũ rất yếu là vì số lượt dán link chỉ đo lường được sự tò mò nhất thời (hiệu ứng Wow / Capability shock), chứ không chứng minh AI đã chìm vào quy trình làm việc (Normalization) của lập trình viên. Liên hệ với bài học từ KPMG và JPMorgan, việc chỉ đo lường bằng Usage (số prompt/lượt dùng) rất dễ dẫn đến định luật Goodhart's Law — nhân viên có thể "chạy số" (paste link liên tục) để đạt KPI mà không thực sự dùng AI để gỡ rối code, từ đó tạo ra Vanity Metrics giả tạo không có ROI.
+
+Việc đổi sang TTFC kết hợp với kiểm soát chất lượng (như case study của Klarna: Volume cao phải đi kèm Trust/Quality) giúp team định lượng chính xác việc RepoMap3D có thực sự giúp Dev làm việc hiệu quả và tiết kiệm tiền cho công ty hay không.
